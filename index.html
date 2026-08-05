@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Topo Trails — Learn to Read Topographic Maps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="boot.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="wrap">
+  <div id="map"><div id="mapBadge">🗺️ ArcGIS Online Race Route</div></div>
+  <button id="drawBtn" class="hidden">✏️ DRAW YOUR OWN ROUTE</button>
+  <div id="searchBox" class="hidden">
+    <button id="searchToggle" title="Search for a place">🔍</button>
+    <input id="searchInput" maxlength="60" placeholder="Search a place, then press Enter…">
+  </div>
+  <div id="drawHint" class="hidden"></div>
+  <div id="gameArea">
+    <canvas id="cv"></canvas>
+    <div id="profileBadge">📈 ELEVATION PROFILE — 6,152 ft course</div>
+
+    <div id="hud">
+    <div class="pill" id="timePill"><small>Time</small><span id="timeTxt">0:00.0</span></div>
+    <div class="pill"><small>Distance</small><span id="distTxt">0 / 6,152 ft</span></div>
+    <div class="pill"><small>Elevation</small><span id="elevTxt">— m</span>
+      <div id="turboBarWrap"><div id="turboBar"></div></div>
+    </div>
+    <div class="pill"><small>Super Jumps</small><span id="sjTxt">🚀🚀</span></div>
+    <button id="muteBtn" title="Sound on/off">🔊</button>
+  </div>
+
+  <div id="toast"></div>
+
+  <button class="ctl" id="brakeBtn"><em>🛑</em>BRAKE</button>
+  <button class="ctl" id="jumpBtn"><em>🦘</em>JUMP</button>
+  <button class="ctl" id="gasBtn"><em>🏍️</em>GAS!</button>
+  </div><!-- /gameArea -->
+
+  <!-- Start screen -->
+  <div class="overlay" id="startOverlay">
+    <div class="card">
+      <h1>TOPO <span class="t2">TRAILS</span></h1>
+      <div class="sub" id="subLine">Read the map. Ride real hills! ⛰️🏁</div>
+      <div class="howto">
+        🗺️ Brown <b>contour lines</b> show how high the land is. Lines <b>close together mean a STEEP hill</b>. Lines far apart mean flat ground.<br>
+        📈 The hills below match the <b>orange line</b> on the map. Your red dot shows where you are.<br>
+        ⛰️ Watch your <b>ELEVATION</b> number go up (▲) and down (▼)!<br>
+        🏍️ <b>GAS</b> → ↑ W &nbsp; 🛑 <b>BRAKE</b> ← ↓ S &nbsp; 🦘 <b>JUMP</b> J &nbsp; 🚀 <b>SUPER JUMP</b> SPACE (only 2!) &nbsp; 🌀 <b>FLIP</b> RETURN in the air<br>
+        🛹 Ramps launch you • 🐄 Jump the cows! • 🚩 Flags save your spot<br>
+        ✏️ Tap <b>DRAW YOUR OWN ROUTE</b>, pick two spots, and ride <b>your</b> own line!<br>
+        🏆 Type your nickname at the finish to make the Top 10!
+      </div>
+      <button class="bigbtn" id="startBtn">START RACE!</button>
+      <div style="margin-top:12px; font-size:13px; opacity:.7;">Created by <a href="https://tbaker.com" target="_blank" rel="noopener" style="color:var(--turbo); font-weight:700;">Tom Baker</a></div>
+    </div>
+  </div>
+
+  <!-- Crash -->
+  <div class="overlay hidden" id="crashOverlay">
+    <div class="card">
+      <h1>WHOOPS! 💥</h1>
+      <div class="sub">Your helmet rolled away! Grab it — the clock is still ticking!</div>
+      <button class="bigbtn" id="respawnBtn">KEEP RACING</button>
+    </div>
+  </div>
+
+  <!-- Finish -->
+  <div class="overlay hidden" id="finishOverlay">
+    <div class="card">
+      <h1 id="finishTitle">🏁 FINISH!</h1>
+      <div id="resultStats">
+        <div class="stat"><b id="rTime">0:00.0</b><span>Your time</span></div>
+        <div class="stat"><b id="rRolls">🌀0</b><span>360 rolls</span></div>
+        <div class="stat"><b id="rStars">0</b><span>Stars</span></div>
+      </div>
+      <div class="sub" id="rankMsg"></div>
+      <div id="savePanel">
+        <div style="font-weight:700">Who was riding? Put your nickname on the board!</div>
+        <input id="finishName" maxlength="12" placeholder="Enter nickname">
+        <br>
+        <button class="bigbtn" id="saveBtn" style="font-size:19px; padding:10px 24px;">SAVE TO TOP 10 🏆</button>
+      </div>
+      <div id="boardPanel" class="hidden">
+        <h2>🏆 Top 10 Riders</h2>
+        <table id="boardTable"><thead><tr><th></th><th style="text-align:left">Rider</th><th>⭐</th><th style="text-align:right">Time</th></tr></thead><tbody></tbody></table>
+      </div>
+      <div style="margin-top:12px"><button class="bigbtn" id="againBtn">RACE AGAIN!</button></div>
+    </div>
+  </div>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>

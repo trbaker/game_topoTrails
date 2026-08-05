@@ -1,0 +1,80 @@
+/* Topo Trails — styles */
+  :root{
+    --sky-top:#69b7e8; --sky-bot:#d8f0fa;
+    --dirt:#a5713d; --grass:#5fb944;
+    --ink:#28325c; --card:#ffffff;
+    --sun:#ffd23f; --turbo:#ff7a1a; --good:#3fbf6b; --bad:#e85d5d;
+    --font-display:'Baloo 2','Fredoka','Comic Sans MS',cursive;
+    --font-body:'Fredoka','Comic Sans MS',cursive;
+  }
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%; overflow:hidden; font-family:var(--font-body); color:var(--ink);}
+  #wrap{position:fixed; inset:0; background:linear-gradient(var(--sky-top),var(--sky-bot));}
+
+  /* ---------- split screen: topo map on top, elevation profile game below ---------- */
+  #map{position:absolute; top:0; left:0; right:0; height:50%; background:#dfe8dc; border-bottom:4px solid var(--ink); z-index:1;}
+  #searchBox{position:absolute; top:12px; left:56px; z-index:1100; display:flex; align-items:center; gap:6px;}
+  #searchToggle{width:36px; height:36px; border-radius:12px; border:3px solid var(--ink); background:#fff; font-size:15px; cursor:pointer; box-shadow:0 2px 0 rgba(40,50,92,.25);}
+  #searchToggle:active{transform:translateY(2px); box-shadow:0 0 0 rgba(40,50,92,.25);}
+  #searchInput{width:0; opacity:0; padding:0; border:0 solid var(--ink); transition:width .22s ease, opacity .22s ease, padding .22s ease; font-family:var(--font-body); font-weight:700; font-size:14px; border-radius:12px; color:var(--ink); background:rgba(255,255,255,.96); outline:none;}
+  #searchBox.open #searchInput{width:200px; opacity:1; padding:7px 11px; border-width:3px;}
+  #drawBtn{position:absolute; top:10px; right:12px; z-index:1100; background:#ffd23f; border:3px solid var(--ink); border-radius:14px; padding:7px 14px; font-family:var(--font-display); font-weight:800; font-size:14px; color:var(--ink); cursor:pointer; box-shadow:0 3px 0 rgba(40,50,92,.3);}
+  #drawBtn:active{transform:translateY(2px); box-shadow:0 1px 0 rgba(40,50,92,.3);}
+  #drawHint{position:absolute; top:56px; right:12px; z-index:1100; background:rgba(255,255,255,.95); border:3px solid var(--ink); border-radius:12px; padding:6px 12px; font-weight:700; font-size:13px; max-width:250px; box-shadow:0 3px 0 rgba(40,50,92,.25); pointer-events:none;}
+  #mapBadge{position:absolute; top:8px; left:50%; transform:translateX(-50%); z-index:500; background:rgba(255,255,255,.92); border:3px solid var(--ink); border-radius:14px; padding:3px 14px; font-family:var(--font-display); font-weight:800; font-size:14px; pointer-events:none;}
+  #gameArea{position:absolute; bottom:0; left:0; right:0; height:50%; overflow:hidden; background:linear-gradient(var(--sky-top),var(--sky-bot));}
+  #profileBadge{position:absolute; top:calc(50% + 70px); left:50%; transform:translateX(-50%); z-index:3; background:rgba(255,255,255,.85); border:2px solid var(--ink); border-radius:12px; padding:1px 12px; font-family:var(--font-display); font-weight:800; font-size:12px; pointer-events:none; opacity:.85;}
+  .emoji-marker{font-size:17px; text-align:center; text-shadow:0 1px 2px rgba(0,0,0,.4); background:none; border:none;}
+  .bike-marker{font-size:24px; text-align:center; filter:drop-shadow(0 2px 2px rgba(0,0,0,.5)); background:none; border:none;}
+  canvas{display:block; width:100%; height:100%;}
+
+  /* ---------- HUD ---------- */
+  #hud{position:absolute; bottom:14px; left:124px; right:240px; display:flex; justify-content:center; align-items:flex-end; pointer-events:none; gap:8px; flex-wrap:wrap-reverse; z-index:3;}
+  @media (max-width:700px){ #hud{left:10px; right:10px; bottom:126px; justify-content:center;} }
+  .pill{background:rgba(255,255,255,.55); border:2px solid rgba(40,50,92,.75); border-radius:12px; padding:3px 10px; font-weight:700; font-size:13px; box-shadow:0 2px 0 rgba(40,50,92,.15); white-space:nowrap;}
+  .pill small{display:block; font-size:9px; font-weight:600; opacity:.6; letter-spacing:.5px; text-transform:uppercase;}
+  #timeTxt{font-family:var(--font-display); font-size:16px; color:var(--turbo); font-variant-numeric:tabular-nums; display:inline-block; min-width:58px; text-align:center;}
+  #timePill{min-width:86px; text-align:center; margin-right:8px;}
+  #turboBarWrap{width:78px; height:8px; background:rgba(232,227,216,.7); border-radius:6px; overflow:hidden; margin-top:3px; border:1.5px solid rgba(40,50,92,.7);}
+  #turboBar{height:100%; width:0%; background:linear-gradient(90deg,#ffb31a,var(--turbo)); transition:width .15s;}
+  #muteBtn{pointer-events:auto; background:rgba(255,255,255,.55); border:2px solid rgba(40,50,92,.75); border-radius:12px; width:32px; height:32px; font-size:14px; cursor:pointer; box-shadow:0 2px 0 rgba(40,50,92,.15);}
+
+  /* ---------- touch controls ---------- */
+  .ctl{position:absolute; bottom:18px; border-radius:50%; border:4px solid var(--ink); font-family:var(--font-display); font-weight:800; color:var(--ink); box-shadow:0 5px 0 rgba(40,50,92,.3); user-select:none; touch-action:none; display:flex; align-items:center; justify-content:center; flex-direction:column; cursor:pointer; z-index:4;}
+  .ctl:active{transform:translateY(3px); box-shadow:0 2px 0 rgba(40,50,92,.3);}
+  #brakeBtn{left:18px; width:92px; height:92px; font-size:18px; background:#ffe3e3;}
+  #gasBtn{right:18px; width:104px; height:104px; font-size:20px; background:#e0f7e6;}
+  #jumpBtn{right:140px; bottom:34px; width:76px; height:76px; font-size:15px; background:#e3ecff;}
+  .ctl em{font-style:normal; font-size:26px; line-height:1;}
+
+  /* ---------- overlays ---------- */
+  .overlay{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(40,50,92,.35); backdrop-filter:blur(2px); z-index:10; overflow:auto; padding:16px 0;}
+  .card{background:var(--card); border:4px solid var(--ink); border-radius:26px; padding:26px 28px; max-width:460px; width:92%; text-align:center; box-shadow:0 8px 0 rgba(40,50,92,.35); animation:pop .25s ease-out;}
+  @keyframes pop{from{transform:scale(.85); opacity:0;} to{transform:scale(1); opacity:1;}}
+  h1{font-family:var(--font-display); font-size:42px; line-height:1;}
+  h1 .t2{color:var(--turbo);}
+  h2{font-family:var(--font-display); font-size:26px; margin-bottom:8px;}
+  .sub{margin:8px 0 14px; font-size:16px;}
+  .howto{text-align:left; background:#f4f8ee; border-radius:14px; padding:10px 16px; font-size:14.5px; margin-bottom:14px; line-height:1.65;}
+  .bigbtn{font-family:var(--font-display); font-size:22px; font-weight:800; color:#fff; background:var(--turbo); border:4px solid var(--ink); border-radius:18px; padding:12px 32px; cursor:pointer; box-shadow:0 5px 0 rgba(40,50,92,.4);}
+  .bigbtn:active{transform:translateY(4px); box-shadow:0 1px 0 rgba(40,50,92,.4);}
+  .bigbtn:disabled{opacity:.55; cursor:wait; transform:none;}
+  #finishName{font-family:var(--font-display); font-size:20px; font-weight:700; text-align:center; border:3px solid var(--ink); border-radius:14px; padding:8px 12px; width:210px; margin:6px 0 12px; color:var(--ink); background:#fffbe8;}
+
+  /* ---------- question ---------- */
+
+  /* ---------- leaderboard ---------- */
+  table{width:100%; border-collapse:collapse; margin:10px 0 16px; font-size:15px;}
+  th{font-size:11px; text-transform:uppercase; letter-spacing:.5px; opacity:.55; padding:2px 6px;}
+  td{padding:5px 6px; border-top:2px solid #eef0f6; font-weight:600;}
+  td.rank{font-family:var(--font-display); font-weight:800; width:34px;}
+  tr.me{background:#fff3d6; outline:3px solid var(--sun); border-radius:8px;}
+  td.t{font-family:var(--font-display); color:var(--turbo); text-align:right;}
+
+  #toast{position:absolute; top:calc(50% + 72px); left:50%; transform:translateX(-50%); background:var(--sun); border:3px solid var(--ink); border-radius:14px; padding:8px 20px; font-family:var(--font-display); font-weight:800; font-size:20px; opacity:0; transition:opacity .3s; pointer-events:none; z-index:5; box-shadow:0 4px 0 rgba(40,50,92,.3); white-space:nowrap;}
+  .hidden{display:none !important;}
+  #resultStats{display:flex; gap:10px; justify-content:center; margin:8px 0 4px;}
+  .stat{background:#f4f8ee; border-radius:14px; padding:8px 14px; min-width:86px;}
+  .stat b{display:block; font-family:var(--font-display); font-size:22px;}
+  .stat span{font-size:11px; text-transform:uppercase; letter-spacing:.5px; opacity:.6;}
+  @media (max-height:520px){ .ctl{transform:scale(.8); transform-origin:bottom;} h1{font-size:32px;} .card{padding:18px 20px;} }
